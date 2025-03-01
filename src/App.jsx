@@ -1,6 +1,5 @@
 import React from 'react'
 import Content from './Content'
-import File from './File'
 import { useState } from 'react'
 import { useEffect } from 'react';
 
@@ -27,7 +26,6 @@ export default function App() {
         <span onClick={handleTitleClick} className="text-md cursor-pointer text-gray-100 select-none bg-gradient-to-br from-pink-500 via-purple-500 to-pink-500 rounded-lg px-2 py-1 w-fit active:scale-95 transition-transform">{title}</span>
       </div>
       <Content />
-      {/* <File /> */}
     </div>
   )
 }
