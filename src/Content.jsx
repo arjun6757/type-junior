@@ -13,6 +13,7 @@ export default function Content() {
     const [classNames, setClassNames] = useState([]);
     const [wordClasses, setWordClasses] = useState([]);
     const correctRef = useRef(null);
+    const wordRef = useRef([]);
 
     useEffect(() => {
         // for (let i = 0; i < 50; i++) {
@@ -67,6 +68,9 @@ export default function Content() {
 
         } else if (e.key === " ") {
 
+            // also need to check if the current line is last line somehow
+
+
             // i need to check here if all classes are correct or not and make a state to track which one's are right
 
             const currentWord = randomWords[activeIndex];
@@ -80,7 +84,9 @@ export default function Content() {
                 const classes = [...wordClasses]; // make a shallow copy
                 classes[activeIndex] = "correct";
                 setWordClasses(classes);
-                setRightOnes(p => [...p, activeIndex]);  // keeping track of the index which was correct
+                setRightOnes(p => [...p, activeIndex]);
+
+                // keeping track of the index which was correct
             } else {
                 // wordRef.current[activeIndex].classList.add('text-red-500');
                 // document.getElementById(`word${activeIndex}`).style.color = "red";
@@ -89,8 +95,11 @@ export default function Content() {
                 setWordClasses(classes);
             }
 
-            // console.log('Space detected')
-            setActiveIndex(p => p + 1);
+            // console.log('Space detecte')
+            if (activeIndex !== randomWords.length) {
+                setActiveIndex(p => p + 1);
+            }
+            // have to work here too
             setClassNames([]);
             setTyped('');
         }
@@ -109,7 +118,7 @@ export default function Content() {
         //     classNames[charIndex] === 'wrong' ? 'text-red-500' : null}
         //  }` : null
 
-        if(placeholderRef?.current?.querySelector('.caret-block')) {
+        if (placeholderRef?.current?.querySelector('.caret-block')) {
             // console.log('working great ?')
             const el = placeholderRef?.current?.querySelector('.caret-block');
             el.classList.remove('caret-block');
@@ -141,6 +150,18 @@ export default function Content() {
         }
     }
 
+    useEffect(() => {
+        if (placeholderRef.current) {
+            const activeWord = wordRef.current[activeIndex];
+            if (activeWord) {
+                placeholderRef.current.scrollTo({
+                    top: activeWord.offsetTop - placeholderRef.current.offsetTop,
+                    behavior: "smooth", // Smooth scrolling
+                });
+            }
+        }
+    }, [activeIndex]); // Scrolls when activeIndex changes
+
     return (
         <div className="flex-col h-full justify-center text-gray-300">
             <div className="flex w-full justify-between mt-2 py-4 px-12 font-semibold">
@@ -148,13 +169,13 @@ export default function Content() {
                     <span ref={timeRef} className="text-lg">60</span>
                     <p>s</p>
                 </div>
-                
+
                 <div className="flex gap-4">
-                    
-                <div className="flex gap-2 items-center">
-                    <span ref={correctRef} className="text-lg">correct:</span>
-                    <p>{rightOnes.length}</p>
-                </div>
+
+                    <div className="flex gap-2 items-center">
+                        <span ref={correctRef} className="text-lg">correct:</span>
+                        <p>{rightOnes.length}</p>
+                    </div>
 
                     <div className="flex gap-2 items-center">
                         <span ref={wpmRef} className="text-lg">00</span>
@@ -168,18 +189,23 @@ export default function Content() {
             </div>
 
 
-            <div tabIndex={0} ref={placeholderRef} onKeyDown={handleKeyDown} className="relative transition-all h-[230px] overflow-hidden mt-16 mb-12 font-code text-3xl text-gray-500 p-4 px-12 flex gap-4 text-wrap flex-wrap select-none focus:outline-0">
+            <div tabIndex={0} ref={placeholderRef} onKeyDown={handleKeyDown} className="relative transition-all h-[14rem] overflow-hidden mt-16 mb-12 font-code text-3xl text-gray-500 p-4 px-12 flex gap-4 text-wrap flex-wrap select-none focus:outline-0">
                 {randomWords.map((word, wordIndex) => (
-                    <div id={`word${wordIndex}`} key={wordIndex} className={`${activeIndex === wordIndex ? "caret-container" : ""} flex 
-                    ${logicBasedWordClass(wordIndex)}
-                    `} >
+
+                    <div
+                        ref={(el) => wordRef.current[wordIndex] = el}
+                        key={wordIndex}
+                        className={`${activeIndex === wordIndex ? "caret-container" : ""} flex ${logicBasedWordClass(wordIndex)}`}
+                    >
                         {word.split("").map((char, charIndex) => (
+
                             <span
                                 key={`${word}-${charIndex}`}
                                 className={logicBasedClass(wordIndex, char, charIndex)}
                             >
                                 {char}
                             </span>
+
                         ))}
 
                     </div>
