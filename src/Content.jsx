@@ -64,15 +64,15 @@ export default function Content() {
             const newClasses = classNames.slice(0, -1); // upto the last class but don't include it
             console.log('classes after backspace: ', newClasses);
             setClassNames(newClasses);
-            
+
         } else if (e.key === " ") {
 
             // i need to check here if all classes are correct or not and make a state to track which one's are right
 
             const currentWord = randomWords[activeIndex];
             const correctOnes = classNames.filter((value) => value === 'correct');
-            
-            if(correctOnes.length === currentWord.length) {
+
+            if (correctOnes.length === currentWord.length) {
                 console.log('matched');
                 // that means all of its characters are correct so highlight this word as white
                 // wordRef.current[activeIndex].classList.add('text-gray-300');
@@ -80,7 +80,7 @@ export default function Content() {
                 const classes = [...wordClasses]; // make a shallow copy
                 classes[activeIndex] = "correct";
                 setWordClasses(classes);
-                setRightOnes(p=> [...p, activeIndex]);  // keeping track of the index which was correct
+                setRightOnes(p => [...p, activeIndex]);  // keeping track of the index which was correct
             } else {
                 // wordRef.current[activeIndex].classList.add('text-red-500');
                 // document.getElementById(`word${activeIndex}`).style.color = "red";
@@ -109,17 +109,32 @@ export default function Content() {
         //     classNames[charIndex] === 'wrong' ? 'text-red-500' : null}
         //  }` : null
 
+        if(document.querySelector('.caret-block')) {
+            const el = document.querySelector('.caret-block');
+            console.log("before removing: ", el.classList);
+            el.classList.remove('caret-block');
+            console.log("after removing: ", el.classList);
+        }
+
         if (wi === activeIndex) {
             // as we wanna return it for only the active word
-            const className = classNames[ci] === 'correct' ? 'text-gray-300' :
-                classNames[ci] === 'wrong' ? 'text-red-500' : null;
+            const classname = classNames[ci];
 
-            return className;
+            if (classname === 'correct') {
+                return 'text-gray-300 caret-block';
+            } else if (classname === 'wrong') {
+                return 'text-red-500 caret-block';
+            }
+            // const className = classNames[ci] === 'correct' ? 'text-gray-300' :
+            //     classNames[ci] === 'wrong' ? 'text-red-500' : null;
+
+            // return className;
         }
     }
 
     const logicBasedWordClass = (wi) => {
         const classname = wordClasses[wi];
+
         if (classname === 'correct') {
             return 'text-gray-300';
         } else if (classname === 'wrong') {
@@ -147,9 +162,9 @@ export default function Content() {
             </div>
 
 
-            <div tabIndex={0} ref={placeholderRef} onKeyDown={handleKeyDown} className="relative h-[230px] overflow-hidden mt-16 mb-12 font-code text-3xl text-gray-500 p-4 px-12 flex gap-4 text-wrap flex-wrap select-none">
+            <div tabIndex={0} ref={placeholderRef} onKeyDown={handleKeyDown} className="relative h-[230px] overflow-hidden mt-16 mb-12 font-code text-3xl text-gray-500 p-4 px-12 flex gap-4 text-wrap flex-wrap select-none focus:outline-0">
                 {randomWords.map((word, wordIndex) => (
-                    <div id={`word${wordIndex}`} ref={(el) => wordRef.current[wordIndex] = el} key={wordIndex} className={`${activeIndex === wordIndex ? "border border-gray-300 rounded-md" : ""} flex 
+                    <div id={`word${wordIndex}`} ref={(el) => wordRef.current[wordIndex] = el} key={wordIndex} className={`${activeIndex === wordIndex ? "caret-container" : ""} flex 
                     ${logicBasedWordClass(wordIndex)}
                     `} >
 

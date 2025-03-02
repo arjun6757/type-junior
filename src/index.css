@@ -6,3 +6,21 @@
     --font-inter: "Inter", Arial, sans-serif;
     --font-code: "Source Code Pro", monospace;
 }
+
+/* .caret-container {
+    @apply relative bg-gray-700 rounded-md
+}
+
+.caret-container::after {
+    content: ' ';
+    @apply w-4 absolute text-white inset-0 animate-pulse
+} */
+
+.caret-block {
+    @apply relative
+}
+
+.caret-block::after {
+    content: '_';
+    @apply absolute bg-gray-700 inset-0 rounded-md animate-pulse
+}
