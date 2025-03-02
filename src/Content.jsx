@@ -61,7 +61,10 @@ export default function Content() {
         } else if (e.key === 'Backspace') {
             const typedContent = typed.slice(0, -1);    // upto the last char but don't include it
             setTyped(typedContent);
-
+            const newClasses = classNames.slice(0, -1); // upto the last class but don't include it
+            console.log('classes after backspace: ', newClasses);
+            setClassNames(newClasses);
+            
         } else if (e.key === " ") {
 
             // i need to check here if all classes are correct or not and make a state to track which one's are right
