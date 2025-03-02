@@ -7,14 +7,14 @@
     --font-code: "Source Code Pro", monospace;
 }
 
-/* .caret-container {
-    @apply relative bg-gray-700 rounded-md
+.caret-container {
+    @apply relative bg-gray-700 scale-105 rounded-md transition-all
 }
 
 .caret-container::after {
-    content: ' ';
-    @apply w-4 absolute text-white inset-0 animate-pulse
-} */
+    content: '';
+    @apply absolute text-white inset-0 animate-pulse
+}
 
 .caret-block {
     @apply relative
