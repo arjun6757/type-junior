@@ -13,7 +13,7 @@
 
 .caret-container::after {
     content: '';
-    @apply absolute text-white inset-0 animate-pulse
+    @apply absolute inset-0
 }
 
 .caret-block {
