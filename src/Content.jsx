@@ -105,15 +105,7 @@ export default function Content() {
         }
     }
 
-    /**
-     * Description of logicBasedClass function
-     * @param {number} wi
-     * @param {string} char
-     * @param {number} ci
-     * @returns {string} a tailwindcss className
-     */
-
-    const logicBasedClass = (wi, char, ci) => {
+    const logicBasedClass = (wi, ci) => {
         // wordIndex === activeIndex ? `${classNames[charIndex] === 'correct' ? 'text-gray-300' :
         //     classNames[charIndex] === 'wrong' ? 'text-red-500' : null}
         //  }` : null
@@ -154,6 +146,8 @@ export default function Content() {
         if (placeholderRef.current) {
             const activeWord = wordRef.current[activeIndex];
             if (activeWord) {
+                console.log('acive word offset top: ', activeWord?.offsetTop);
+                console.log('placeholder offset top: ', placeholderRef?.current?.offsetTop);
                 placeholderRef.current.scrollTo({
                     top: activeWord.offsetTop - placeholderRef.current.offsetTop,
                     behavior: "smooth", // Smooth scrolling
@@ -201,7 +195,7 @@ export default function Content() {
 
                             <span
                                 key={`${word}-${charIndex}`}
-                                className={logicBasedClass(wordIndex, char, charIndex)}
+                                className={logicBasedClass(wordIndex, charIndex)}
                             >
                                 {char}
                             </span>
