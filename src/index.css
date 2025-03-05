@@ -8,19 +8,39 @@
 }
 
 .caret-container {
-    @apply relative bg-gray-700 scale-105 rounded-md transition-all
+    /* @apply relative bg-transparent border; */
 }
 
-.caret-container::after {
-    content: '';
-    @apply absolute inset-0
-}
+/* .caret-container::before {
+    content: "";
+    @apply absolute top-0 left-0 -translate-x-full [data-status=active]:translate-x-full w-full h-full border;
+} */
+
+/* .caret-container::after {
+    content: "";
+    @apply absolute top-0 left-0 translate-x-full bg-gray-950 w-full h-full border;
+} */
+
+
+
+/* somehow need to eliminate the need for it both here and content.jsx */
+/* .caret-container::before { */
+/* content: ''; */
+/* @apply absolute -left-4 w-4 h-full bg-gray-300 text-black; */
+/* @apply absolute left-0 w-4 h-full bg-gray-500 text-black; */
+/* } */
 
 .caret-block {
     @apply relative
 }
 
 .caret-block::after {
-    content: '_';
-    @apply absolute bg-gray-700 inset-0 rounded-md animate-pulse
+    /* content: attr(data-char); */
+    content: "";
+    /* @apply absolute bg-gray-700 inset-0 rounded-md animate-pulse */
+    @apply absolute top-0 right-0 w-[3px] rounded-lg translate-x-full h-full bg-yellow-500 text-black;
+}
+
+.neutral {
+    @apply bg-white w-full h-full
 }

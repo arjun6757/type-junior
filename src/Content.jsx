@@ -10,7 +10,7 @@ export default function Content() {
     const [typed, setTyped] = useState('');
     const [randomWords, setRandomWords] = useState([]);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [classNames, setClassNames] = useState([]);
+    const [classNames, setClassNames] = useState(["correct"]);
     const [wordClasses, setWordClasses] = useState([]);
     const correctRef = useRef(null);
     const wordRef = useRef([]);
@@ -149,7 +149,7 @@ export default function Content() {
                 console.log('acive word offset top: ', activeWord?.offsetTop);
                 console.log('placeholder offset top: ', placeholderRef?.current?.offsetTop);
                 placeholderRef.current.scrollTo({
-                    top: activeWord.offsetTop - placeholderRef.current.offsetTop,
+                    top: activeWord.offsetTop - placeholderRef.current.offsetTop + 4,
                     behavior: "smooth", // Smooth scrolling
                 });
             }
@@ -167,23 +167,22 @@ export default function Content() {
                 <div className="flex gap-4">
 
                     <div className="flex gap-2 items-center">
-                        <span ref={correctRef} className="text-lg">correct:</span>
+                        <span ref={correctRef} className="uppercase">Correct :</span>
                         <p>{rightOnes.length}</p>
                     </div>
 
                     <div className="flex gap-2 items-center">
-                        <span ref={wpmRef} className="text-lg">00</span>
+                        <span ref={wpmRef}>00</span>
                         <p>WPM</p>
                     </div>
                     <div className="flex items-center">
-                        <span ref={accuracyRef} className="text-lg">100</span>
+                        <span ref={accuracyRef}>100</span>
                         <p>%</p>
                     </div>
                 </div>
             </div>
 
-
-            <div tabIndex={0} ref={placeholderRef} onKeyDown={handleKeyDown} className="relative transition-all h-[14rem] overflow-hidden mt-16 mb-12 font-code text-3xl text-gray-500 p-4 px-12 flex gap-4 text-wrap flex-wrap select-none focus:outline-0">
+            <div tabIndex={0} ref={placeholderRef} onKeyDown={handleKeyDown} className="relative transition-all h-[14rem] overflow-hidden mt-16 mb-12 font-code text-3xl text-[#555] p-4 px-12 flex gap-4 text-wrap flex-wrap select-none focus:outline-0">
                 {randomWords.map((word, wordIndex) => (
 
                     <div
@@ -194,6 +193,7 @@ export default function Content() {
                         {word.split("").map((char, charIndex) => (
 
                             <span
+                                data-char={char}
                                 key={`${word}-${charIndex}`}
                                 className={logicBasedClass(wordIndex, charIndex)}
                             >
@@ -208,15 +208,15 @@ export default function Content() {
 
             <div className="max-w-[200px] mx-auto flex justify-around mt-12">
 
-                <button className="group bg-gray-800 focus-visible:outline-2 focus-visible:outline-gray-300 px-4 py-2 rounded cursor-pointer text-gray-400">
+                <button className="group bg-transparent focus-visible:outline-2 focus-visible:outline-gray-300 px-4 py-2 rounded cursor-pointer text-[#888]">
                     <ArrowRightIcon className="group-hover:text-gray-100 group-focus:translate-x-3 transition-transform duration-500" />
                 </button>
 
-                <button className="group bg-gray-800 focus-visible:outline-2 focus-visible:outline-gray-300 px-4 py-2 rounded cursor-pointer text-gray-400">
+                <button className="group bg-transparent focus-visible:outline-2 focus-visible:outline-gray-300 px-4 py-2 rounded cursor-pointer text-[#888]">
                     <RotateCw className="group-hover:text-gray-100 group-focus:rotate-180 transition-transform duration-500" />
                 </button>
 
-                <button className="group bg-gray-800 focus-visible:outline-2 focus-visible:outline-gray-300 px-4 py-2 rounded cursor-pointer text-gray-400">
+                <button className="group bg-transparent focus-visible:outline-2 focus-visible:outline-gray-300 px-4 py-2 rounded cursor-pointer text-[#888]">
                     <WrenchIcon className="group-hover:text-gray-100 group-focus:rotate-180 transition-transform duration-500" />
                 </button>
 
