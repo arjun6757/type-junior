@@ -1,7 +1,21 @@
-import React from 'react'
+import { RotateCw, MousePointer, Clock } from "lucide-react";
 
-export default function Icons() {
+const defaultClassName='w-4 h-4';
+
+export function RotateClockWiseIcon({ className=null }) {
   return (
-    <div>Icons</div>
+    <RotateCw className={ className ?? defaultClassName } />
+  )
+}
+
+export function MousePointerIcon({ className=null }) {
+  return (
+    <MousePointer className={ className ?? defaultClassName } />
+  )
+}
+
+export function ClockIcon({ className=null }) {
+  return (
+    <Clock className={ className ?? defaultClassName } />
   )
 }
