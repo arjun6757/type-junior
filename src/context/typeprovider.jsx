@@ -9,32 +9,30 @@ export default function TypeProvider({ children }) {
             wpmRef, timeRef,
             accuracyRef, placeholderRef,
             wordRef, loseFocusElementRef,
-            caretRef
         } = useDomRefs();
 
     const [rightOnes, setRightOnes] = useState([]);
     const [typed, setTyped] = useState('');
     const [randomWords, setRandomWords] = useState([]);
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [classNames, setClassNames] = useState([]);
-    const [wordClasses, setWordClasses] = useState([]);
-    const [caretPosition, setCaretPosition] = useState(0);
+    const [activeWordIndex, setActiveWordIndex] = useState(0);
+    const [activeCharIndex, setActiveCharIndex] = useState(0);
+    const [charClasses, setCharClasses] = useState([]);
     const [loseFocus, setLoseFocus] = useState(false);
     const [timer, setTimer] = useState(30);
     const [typing, setTyping] = useState(false);
     const [initial, setInital] = useState(0);
 
-    useEffect(() => {
-        if (placeholderRef.current) {
-            const activeWord = wordRef.current[activeIndex];
-            if (activeWord) {
-                placeholderRef.current.scrollTo({
-                    top: activeWord.offsetTop - placeholderRef.current.offsetTop + 4,
-                    behavior: "smooth",
-                });
-            }
-        }
-    }, [activeIndex]);
+    // useEffect(() => {
+    //     if (placeholderRef.current) {
+    //         const activeWord = wordRef.current[activeIndex];
+    //         if (activeWord) {
+    //             placeholderRef.current.scrollTo({
+    //                 top: activeWord.offsetTop - placeholderRef.current.offsetTop + 16,
+    //                 behavior: "smooth",
+    //             });
+    //         }
+    //     }
+    // }, [activeIndex]);
 
     return (
         <TypeContext.Provider
@@ -43,16 +41,14 @@ export default function TypeProvider({ children }) {
                     wpmRef, timeRef,
                     accuracyRef, placeholderRef,
                     wordRef, loseFocusElementRef,
-                    caretRef
                 },
                 state: {
                     rightOnes, setRightOnes,
                     typed, setTyped,
                     randomWords, setRandomWords,
-                    activeIndex, setActiveIndex,
-                    classNames, setClassNames,
-                    wordClasses, setWordClasses,
-                    caretPosition, setCaretPosition,
+                    activeWordIndex, setActiveWordIndex,
+                    activeCharIndex, setActiveCharIndex,
+                    charClasses, setCharClasses,
                     loseFocus, setLoseFocus,
                     timer, setTimer,
                     typing, setTyping,
