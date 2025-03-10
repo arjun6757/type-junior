@@ -12,11 +12,25 @@ export default function Placeholder() {
     const [typed, setTyped] = useState("");
     const [activeWordIndex, setActiveWordIndex] = useState(0);
     const [activeCharIndex, setActiveCharIndex] = useState(0);
-    const [caretPosi, setCaretPosi] = useState(0);
+    const [typing, setTyping] = useState(false);
     const charRef = useRef([]);
     const wordRef = useRef([]);
 
-    console.log(typed);
+    // console.log(typed);
+
+    useEffect(() => {
+
+        const activeWord = wordRef?.current[activeWordIndex];
+        
+        if(activeWord) {
+            placeholderRef?.current?.scrollTo({
+                // top: activeWord?.offsetTop - placeholderRef?.current?.offsetTop + 30 ,
+                top: activeWord?.offsetTop - placeholderRef?.current?.offsetTop + 40,
+                behavior: "smooth",
+            })
+        }
+
+    }, [activeWordIndex])
 
     useEffect(() => {
 
@@ -28,21 +42,49 @@ export default function Placeholder() {
 
     }, [])
 
+    //  this one is not efficient at all
+    // useEffect(() => {
+    //     if (wordArray.length != 0) {
+
+    //         for (let i = 0; i < wordArray.length; i++) {
+    //             const word = wordArray[i];
+
+    //             if (word) {
+    //                 const charArray = word.split("");
+    //                 const charClassNamesArray = word.split("").map(() => "character");
+    //                 setWordDetails(p => [...p, { wordIndex: i, chars: charArray, classNames: charClassNamesArray }]);
+    //             }
+
+    //         }
+    //     }
+    // }, [wordArray])
+
     useEffect(() => {
-        if (wordArray.length != 0) {
 
-            for (let i = 0; i < wordArray.length; i++) {
-                const word = wordArray[i];
+        if(wordArray.length != 0) {
+            const newWordDetails = wordArray.map((word, index) => ({
+                wordIndex: index,
+                chars: word.split(""),
+                classNames: word.split("").map(() => "character")
+            }))
 
-                if (word) {
-                    const charArray = word.split("");
-                    const charClassNamesArray = word.split("").map(() => "character");
-                    setWordDetails(p => [...p, { wordIndex: i, chars: charArray, classNames: charClassNamesArray }]);
-                }
-
-            }
+            setWordDetails(newWordDetails);
         }
-    }, [wordArray])
+
+    }, [wordArray]);
+
+    // useEffect(() => {
+
+    //     if (!typing) {
+    //         const delay = setTimeout(() => {
+    //             setTyping(true);
+    //         }, 3000);
+
+    //         return () => clearTimeout(delay);
+    //     }
+
+
+    // }, [typing])
 
     const check = (character) => {
         const filteredWordDetails = wordDetails.filter((obj) => obj.wordIndex === activeWordIndex)[0];
@@ -131,6 +173,8 @@ export default function Placeholder() {
         } else if (e.key === " ") {
             handleSpace();
         }
+
+        // if (typing) setTyping(false);
     }
 
     const handleBlur = () => {
@@ -144,9 +188,9 @@ export default function Placeholder() {
         return () => clearTimeout(timeoutId);
     }
 
-// currently have to orgnize all of this and delete all the old logic 
-// and also have to handle the activeCharIndex out of bounds
-// meaning if user typed more words than required then i think in need to somehow show the text();
+    // currently have to orgnize all of this and delete all the old logic 
+    // and also have to handle the activeCharIndex out of bounds
+    // meaning if user typed more words than required then i think in need to somehow show the text();
 
     return (
         <div
@@ -158,11 +202,12 @@ export default function Placeholder() {
         >
 
             <div
-                style={{ transform: `translateX(calc(0.55em + ${charRef.current[`${activeWordIndex}-${activeCharIndex-1}`]?.offsetLeft || wordRef.current[activeWordIndex]?.offsetLeft - 20}px))`,
-                top: `${wordRef.current[activeWordIndex]?.offsetTop}px`
-            }}
-                className="absolute left-0 transition-transform top-4 h-10 w-[3px] rounded-3xl bg-yellow-500 animate-blink">
-                 {/* {Caret} */}
+                style={{
+                    transform: `translateX(calc(0.55em + ${charRef.current[`${activeWordIndex}-${activeCharIndex - 1}`]?.offsetLeft || wordRef.current[activeWordIndex]?.offsetLeft - 20}px))`,
+                    top: `${wordRef.current[activeWordIndex]?.offsetTop}px`
+                }}
+                className={`absolute left-0 transition-transform top-4 h-10 w-1 bg-yellow-400 rounded-lg ${typing ? "animate-blink" : " "}`}>
+                {/* {Caret} */}
             </div>
 
             {wordArray.map((word, wordIndex) => (
@@ -179,7 +224,7 @@ export default function Placeholder() {
                             key={`${wordIndex}-${charIndex}`}
                             data-char={char}
                             className={
-                                c_class(wordIndex, charIndex) === "correct" ? "text-gray-300"
+                                c_class(wordIndex, charIndex) === "correct" ? "text-[#d1d0c5]"
                                     :
                                     c_class(wordIndex, charIndex) === "wrong" ? "text-red-500" : null
                             }
