@@ -47,7 +47,7 @@
 
 
 .animate-blink {
-    animation: blink 1s infinite;
+    animation: blink 1s ease-in-out infinite;
 }
 
 @keyframes blink {

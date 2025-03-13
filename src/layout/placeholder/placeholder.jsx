@@ -1,36 +1,17 @@
 import { useEffect, useState, useRef } from "react";
-import LoseFocus from "./losefocus";
 import { words } from "@/helpers/words";
-import { useAllRefs, useAllStates } from "@/context/typeprovider";
 
 export default function Placeholder() {
 
-    const { loseFocus, setLoseFocus } = useAllStates();
-    const { placeholderRef, loseFocusElementRef } = useAllRefs();
+    const placeholderRef = useRef(null);
     const [wordArray, setWordArray] = useState([]);
     const [wordDetails, setWordDetails] = useState([]);
     const [typed, setTyped] = useState("");
     const [activeWordIndex, setActiveWordIndex] = useState(0);
     const [activeCharIndex, setActiveCharIndex] = useState(0);
-    const [typing, setTyping] = useState(false);
     const charRef = useRef([]);
     const wordRef = useRef([]);
-
-    // console.log(typed);
-
-    useEffect(() => {
-
-        const activeWord = wordRef?.current[activeWordIndex];
-        
-        if(activeWord) {
-            placeholderRef?.current?.scrollTo({
-                // top: activeWord?.offsetTop - placeholderRef?.current?.offsetTop + 30 ,
-                top: activeWord?.offsetTop - placeholderRef?.current?.offsetTop + 40,
-                behavior: "smooth",
-            })
-        }
-
-    }, [activeWordIndex])
+    const timing = typed.length > 0;
 
     useEffect(() => {
 
@@ -40,28 +21,11 @@ export default function Placeholder() {
             placeholderRef.current.focus();
         }
 
-    }, [])
-
-    //  this one is not efficient at all
-    // useEffect(() => {
-    //     if (wordArray.length != 0) {
-
-    //         for (let i = 0; i < wordArray.length; i++) {
-    //             const word = wordArray[i];
-
-    //             if (word) {
-    //                 const charArray = word.split("");
-    //                 const charClassNamesArray = word.split("").map(() => "character");
-    //                 setWordDetails(p => [...p, { wordIndex: i, chars: charArray, classNames: charClassNamesArray }]);
-    //             }
-
-    //         }
-    //     }
-    // }, [wordArray])
+    }, []);
 
     useEffect(() => {
 
-        if(wordArray.length != 0) {
+        if (wordArray.length != 0) {
             const newWordDetails = wordArray.map((word, index) => ({
                 wordIndex: index,
                 chars: word.split(""),
@@ -73,18 +37,19 @@ export default function Placeholder() {
 
     }, [wordArray]);
 
-    // useEffect(() => {
+    // useEffect for handling the scrolling of texts
+    useEffect(() => {
 
-    //     if (!typing) {
-    //         const delay = setTimeout(() => {
-    //             setTyping(true);
-    //         }, 3000);
+        const activeWord = wordRef?.current[activeWordIndex];
 
-    //         return () => clearTimeout(delay);
-    //     }
+        if (activeWord) {
+            placeholderRef?.current?.scrollTo({
+                top: activeWord?.offsetTop - placeholderRef?.current?.offsetTop + 24,
+                behavior: "smooth",
+            });
+        }
 
-
-    // }, [typing])
+    }, [activeWordIndex]);
 
     const check = (character) => {
         const filteredWordDetails = wordDetails.filter((obj) => obj.wordIndex === activeWordIndex)[0];
@@ -136,8 +101,6 @@ export default function Placeholder() {
     }
 
     const handleBackSpace = () => {
-
-
         const content = typed.slice(0, -1);
         setTyped(content);
         const newClassNameArray = [...wordDetails[activeWordIndex].classNames];
@@ -160,9 +123,6 @@ export default function Placeholder() {
     }
 
     const handleKeyDown = (e) => {
-        if (loseFocus) return;
-        // if (timer === 0) return;
-
         const regex = /^[a-zA-Z0-9]$/;     // for filtering => single letter or number
         const valid = regex.test(e.key);
 
@@ -173,32 +133,15 @@ export default function Placeholder() {
         } else if (e.key === " ") {
             handleSpace();
         }
-
-        // if (typing) setTyping(false);
     }
-
-    const handleBlur = () => {
-        const timeoutId = setTimeout(() => {
-            if (!loseFocus) {
-                setLoseFocus(true);
-                focus(loseFocusElementRef);
-            }
-        }, 3000);
-
-        return () => clearTimeout(timeoutId);
-    }
-
-    // currently have to orgnize all of this and delete all the old logic 
-    // and also have to handle the activeCharIndex out of bounds
-    // meaning if user typed more words than required then i think in need to somehow show the text();
 
     return (
         <div
             tabIndex={0}
             ref={placeholderRef}
-            onBlur={handleBlur}
+            // onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="relative transition-all h-[14rem] overflow-hidden mt-16 mb-12 font-code text-3xl text-[#555] p-4 px-12 flex gap-4 text-wrap flex-wrap select-none focus:outline-0"
+            className="relative transition-all h-[14rem] overflow-hidden mt-5 mb-12 font-code text-3xl text-[#666] px-12 py-4 leading-[1.25em] flex gap-4 text-wrap flex-wrap select-none focus:outline-0"
         >
 
             <div
@@ -206,8 +149,8 @@ export default function Placeholder() {
                     transform: `translateX(calc(0.55em + ${charRef.current[`${activeWordIndex}-${activeCharIndex - 1}`]?.offsetLeft || wordRef.current[activeWordIndex]?.offsetLeft - 20}px))`,
                     top: `${wordRef.current[activeWordIndex]?.offsetTop}px`
                 }}
-                className={`absolute left-0 transition-transform top-4 h-10 w-1 bg-yellow-400 rounded-lg ${typing ? "animate-blink" : " "}`}>
-                {/* {Caret} */}
+                className={`${ timing > 0 ? "" : "animate-blink" } absolute left-0 transition-transform top-0 h-10 w-1 bg-yellow-300 rounded-lg`}>
+                { }
             </div>
 
             {wordArray.map((word, wordIndex) => (
@@ -224,7 +167,7 @@ export default function Placeholder() {
                             key={`${wordIndex}-${charIndex}`}
                             data-char={char}
                             className={
-                                c_class(wordIndex, charIndex) === "correct" ? "text-[#d1d0c5]"
+                                c_class(wordIndex, charIndex) === "correct" ? "text-[#f0f0f0]"
                                     :
                                     c_class(wordIndex, charIndex) === "wrong" ? "text-red-500" : null
                             }
@@ -236,9 +179,6 @@ export default function Placeholder() {
 
                 </div>
             ))}
-
-            <LoseFocus />
-
         </div>
     );
 }
