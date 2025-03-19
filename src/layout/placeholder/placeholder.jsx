@@ -79,7 +79,6 @@ export default function Placeholder() {
             });
         }
 
-        setActiveCharIndex(p => p + 1);
     }
 
     const c_class = (wi, ci) => {
@@ -98,7 +97,34 @@ export default function Placeholder() {
         const char = typedContent[typedContent.length - 1];
         setTyped(typedContent);
         check(char);
+
+        setActiveCharIndex(p => p + 1);
+        // const activeWord = wordArray(activeWordIndex);
+        // setActiveCharIndex(p=> p % activeWord.length);
+        // const activeWord = wordArray[activeWordIndex];
+
+        // if(activeCharIndex >= activeWord.length) {
+        //     const activeWord = wordRef?.current[activeWordIndex];
+        //     activeWord.textContent = typed;
+
+        //     console.log(activeWord);
+        // }
     }
+
+    // no plans for mobile
+    // const handleValidKeyStrokeVirtual = (value) => {
+
+    //     const typedContent = typed + value;
+    //     if (typedContent.trim() === "") {
+    //         return;
+    //     }
+
+    //     const char = typedContent[typedContent.length - 1];
+    //     setTyped(typedContent);
+    //     check(char);
+
+    //     setActiveCharIndex(p => p + 1);
+    // }
 
     const handleBackSpace = () => {
         const content = typed.slice(0, -1);
@@ -112,14 +138,46 @@ export default function Placeholder() {
             return newWordDetails;
         })
 
-        if (activeCharIndex === 0) return;
-        setActiveCharIndex(p => p - 1);
+        // // if (activeCharIndex === 0) return;
+        // const 
+        // console.log('char that was cleared: ', activeCharIndex-1);
+        // console.log('active char index: ', (activeCharIndex-1) % wordArray[activeWordIndex].length);
+        console.log(activeCharIndex);
+
+        if (activeCharIndex === 0) {
+            if (activeWordIndex === 0) return;
+            const typedArray = typed.split(" ");
+            const prevWord = typedArray[activeWordIndex - 1];
+            console.log('typedArray: ', typedArray, 'prevWord: ', prevWord);
+
+            // have to handle all spaces too
+
+            setActiveCharIndex(prevWord.length);
+            setActiveWordIndex(p => p === 0 ? p : p - 1);
+        } else {
+            setActiveCharIndex(p => p - 1);
+        }
+
+
     }
 
     const handleSpace = () => {
+        const typedArray = typed.split(" ");
+        const prevWord = typedArray[activeWordIndex];
+
+        if(prevWord.length < 1) return;
+        
+        console.log('typedArray: ', typedArray, 'prevWord: ', prevWord);
+
         setActiveWordIndex(p => p + 1);
-        setActiveCharIndex(0);
-        setTyped('');
+
+        if (activeCharIndex === prevWord.length) {
+            setActiveCharIndex(p => p % prevWord.length);
+        } else {
+            setActiveCharIndex(0);
+        }
+
+        setTyped(space => space + " ");
     }
 
     const handleKeyDown = (e) => {
@@ -135,22 +193,35 @@ export default function Placeholder() {
         }
     }
 
+    // const handleInput = (e) => {
+    //     const regex = /^[a-zA-Z0-9]$/;
+    //     const valid = regex.test(e.target.value);
+
+    //     if (valid) {
+    //         handleValidKeyStrokeVirtual(e.target.value)
+    //     } else if (e.target.value === " ") {
+    //         handleSpace()
+    //     } else {
+    //         handleBackSpace()
+    //     }
+    // }
+
     return (
+
         <div
             tabIndex={0}
             ref={placeholderRef}
             // onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="relative transition-all h-[14rem] overflow-hidden mt-5 mb-12 font-code text-3xl text-[#666] px-12 py-4 leading-[1.25em] flex gap-4 text-wrap flex-wrap select-none focus:outline-0"
+            className="relative h-[14rem] overflow-hidden mt-5 mb-12 font-code text-3xl text-[#666] px-12 py-4 leading-[1.25em] flex gap-4 text-wrap flex-wrap select-none focus:outline-0"
         >
-
             <div
                 style={{
                     transform: `translateX(calc(0.55em + ${charRef.current[`${activeWordIndex}-${activeCharIndex - 1}`]?.offsetLeft || wordRef.current[activeWordIndex]?.offsetLeft - 20}px))`,
                     top: `${wordRef.current[activeWordIndex]?.offsetTop}px`
                 }}
-                className={`${ timing > 0 ? "" : "animate-blink" } absolute left-0 transition-transform top-0 h-10 w-1 bg-yellow-300 rounded-lg`}>
-                { }
+                className={`${timing > 0 ? "" : "animate-blink"} absolute left-0 transition-transform top-0 h-10 w-1 bg-yellow-300 rounded-lg`}>
+                {}
             </div>
 
             {wordArray.map((word, wordIndex) => (
